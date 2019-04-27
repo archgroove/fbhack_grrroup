@@ -111,13 +111,15 @@ class CreateTask(Resource):
         t.assignee = args.assignee
         t.status = args.status
         t.color = args.color
+        db.session.add(t)
+        db.session.commit()
 
         return {
             'status': True,
             'task': {
                 "name": args.name,
                 "description": args.description,
-                "assignee": User.query.get(args.assigned_id),
+                "assignee": User.query.get(args.assigned_id).id,
                 "status": args.status,
                 "color": args.color
             }
