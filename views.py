@@ -38,3 +38,4 @@ class Project(Resource):
             "tasks": [task.id for task in Task.query.all()],
             "users": [user.id for user in User.query.all()]
         }
+    return project
