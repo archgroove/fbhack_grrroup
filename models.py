@@ -6,7 +6,7 @@ class User(db.Model):
     facebook_details = db.Column(db.String(80), unique=True, nullable=True)
     name = db.Column(db.String(120), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    avatar = db.Column(db.String(120), unique=False, nullable=True)
+    avatar = db.Column(db.String(240), unique=False, nullable=True)
 
     def __repr__(self):
         return '<User %r>' % self.username

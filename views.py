@@ -224,12 +224,14 @@ class CreateUser(Resource):
         parser.add_argument('facebook_details', type=str)
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('email', type=str, required=True)
+        parser.add_argument('avatar', type=str, required=False)
         args = parser.parse_args()
 
         u = User()
         u.facebook_details = args.facebook_details
         u.name = args.name
         u.email = args.email
+        u.avatar = args.avatar
         db.session.add(u)
         db.session.commit()
 
@@ -238,7 +240,8 @@ class CreateUser(Resource):
             "user": {
                 "facebook_details": args.facebook_details,
                 "name": args.name,
-                "email": args.email
+                "email": args.email,
+                "avatar": args.avatar
             }
         }
 
