@@ -9,6 +9,7 @@ class UserList(Resource):
         for user in User.query.all():
             all_users.append(
                 { 
+                    "id": user.id,
                     "name": user.name,
                     "assigned_tasks": [task.id for task in user.tasks],
                     "photo_url": "static_photo.jpg"
@@ -76,7 +77,7 @@ class GetUser(Resource):
 
 
 class ChangeTask(Resource):
-    def post(self, task_id):
+    def put(self, task_id):
         
         from models import User, Task, TASK_STATUSES
         from app import db
@@ -99,13 +100,13 @@ class ChangeTask(Resource):
         if not args.assigned_id is None and User.query.get(args.assigned_id) is None:
             return {"status": False, "message": "Invalid assigned id"}
 
-        t = Task()
+        t = Task.query.get(task_id)
         if args.name:
             t.name = args.name
         if args.description:
             t.description = args.description
         if args.assigned_id:
-            t.assignee = args.assigned_id
+            t.assigned_id = args.assigned_id
         if args.status:
             t.status = args.status
         if args.color:
@@ -118,7 +119,7 @@ class ChangeTask(Resource):
             'task': {
                 "name": t.name,
                 "description": t.description,
-                "assignee": t.assignee,
+                "assignee": t.assigned_id,
                 "status": t.status,
                 "color": t.color
             }
