@@ -41,10 +41,27 @@ class Project(Resource):
         return project
 
 class GetTask(Resource):
-    pass
+    def get(self, task_id):
+        task = Task.query.get(int(task_id))
+        ret_task = {
+            "id": task.id,
+            "name": task.name,
+            "description": task.description,
+            "assignee": task.assignee,
+            "status": task.status,
+            "color": "0000ff"
+        }
+        return ret_task
 
 class GetUser(Resource):
-    pass
+    def get(self, user_id):
+        user = User.query.get(int(user_id))
+        ret_user = {
+            "name": user.name,
+            "assigned_tasks": user.tasks,
+            "photo_url": "static_photo.jpg"
+        }
+        return ret_user
 
 class ChangeTask(Resource):
     pass
