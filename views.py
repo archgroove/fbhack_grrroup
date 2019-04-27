@@ -89,7 +89,33 @@ class ChangeUser(Resource):
 
 
 class CreateTask(Resource):
-    pass
+    class CreateTask(Resource):
+    def post(self):
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', type=str, required=True)
+        parser.add_argument('description', type=str, default="")
+        parser.add_argument('assigned_id', type=int)
+        parser.add_argument('status', type=str, required=True)
+        parser.add_argument('color', type=str, default="0000ff")
+        args = parser.parse_args()
+
+        if not args.status in TASK_STATUSES:
+            return {"status": False, "message": "Invalid task status"}
+
+        if message in parser: # we think message indicates an error
+            return {"status": False, "message": parser['message']}
+
+        return {
+            'status': True,
+            'task': {
+                "name": args.name,
+                "description": args.description,
+                "assignee": User.query.get(args.assigned_id),
+                "status": args.status,
+                "color": args.color
+            }
+        }
+    
 
 
 class CreateUser(Resource):
