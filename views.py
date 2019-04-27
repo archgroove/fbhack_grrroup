@@ -224,14 +224,22 @@ class CreateUser(Resource):
         parser.add_argument('facebook_details', type=str)
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('email', type=str, required=True)
-        parser.add_argument('avatar', type=str, required=False)
+        parser.add_argument('avatar', type=str)
         args = parser.parse_args()
 
+        if 'message' in args:
+            return {"status": False, "message": args["message"]}
+
+        if args.email in [user.email for user in User.query.all()]:
+            return {"status": False, "message": "Email already exists"}
+
         u = User()
-        u.facebook_details = args.facebook_details
+        if args.facebook_details:
+            u.facebook_details = args.facebook_details
         u.name = args.name
         u.email = args.email
-        u.avatar = args.avatar
+        if args.avatar:
+            u.avatar = args.avatar
         db.session.add(u)
         db.session.commit()
 
