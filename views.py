@@ -64,6 +64,20 @@ class GetUser(Resource):
         return ret_user
 
 class ChangeTask(Resource):
+    def post(self, task_id):
+        parser.add_argument('name_of_thing_you_want_to_add', type=str)
+        args = parser.parse_args()
+
+        new_task = Task()
+        new_task.thing = "thing"
+
+        db.session.add(new_task)
+        db.session.commit()
+
+        return {
+            'status': True,
+            'thingo' = args.get('name_of_thing_you_want_to_add')
+        }
     pass
 
 class ChangeUser(Resource):
