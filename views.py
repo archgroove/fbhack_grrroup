@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from models import User
+from models import User, Task
 
 
 class UserList(Resource):
