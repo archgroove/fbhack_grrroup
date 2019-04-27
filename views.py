@@ -26,7 +26,7 @@ class TaskList(Resource):
                 "id": task.id,
                 "name": task.name,
                 "description": task.description,
-                "assignee": task.assignee,
+                "assignee": task.assignee.id,
                 "status": task.status,
                 "color": "0000ff"
             })
