@@ -40,6 +40,7 @@ class Project(Resource):
         }
         return project
 
+
 class GetTask(Resource):
     def get(self, task_id):
         task = Task.query.get(int(task_id))
@@ -53,6 +54,7 @@ class GetTask(Resource):
         }
         return ret_task
 
+
 class GetUser(Resource):
     def get(self, user_id):
         user = User.query.get(int(user_id))
@@ -62,6 +64,7 @@ class GetUser(Resource):
             "photo_url": "static_photo.jpg"
         }
         return ret_user
+
 
 class ChangeTask(Resource):
     def post(self, task_id):
@@ -76,15 +79,18 @@ class ChangeTask(Resource):
 
         return {
             'status': True,
-            'thingo' = args.get('name_of_thing_you_want_to_add')
+            'thingo': args.get('name_of_thing_you_want_to_add')
         }
     pass
+
 
 class ChangeUser(Resource):
     pass
 
+
 class CreateTask(Resource):
     pass
+
 
 class CreateUser(Resource):
     pass
