@@ -102,8 +102,15 @@ class CreateTask(Resource):
         if not args.status in TASK_STATUSES:
             return {"status": False, "message": "Invalid task status"}
 
-        if message in parser: # we think message indicates an error
+        if message in args: # we think message indicates an error
             return {"status": False, "message": parser['message']}
+
+        t = Task()
+        t.name = args.name
+        t.description = args.description
+        t.assignee = args.assignee
+        t.status = args.status
+        t.color = args.color
 
         return {
             'status': True,
@@ -115,7 +122,6 @@ class CreateTask(Resource):
                 "color": args.color
             }
         }
-    
 
 
 class CreateUser(Resource):
