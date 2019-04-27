@@ -13,7 +13,7 @@ class UserList(Resource):
                     "id": user.id,
                     "name": user.name,
                     "assigned_tasks": [task.id for task in user.tasks],
-                    "photo_url": user.avatar
+                    "photo_url": user.avatar if user.avatar else "photo_url.jpg"
                 }
             )
         return all_users
