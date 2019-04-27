@@ -10,7 +10,7 @@ class UserList(Resource):
             all_users.append(
                 { 
                     "name": user.name,
-                    "assigned_tasks": [task.name for task in user.tasks],
+                    "assigned_tasks": [task.id for task in user.tasks],
                     "photo_url": "static_photo.jpg"
                 }
             )
@@ -26,7 +26,7 @@ class TaskList(Resource):
                 "id": task.id,
                 "name": task.name,
                 "description": task.description,
-                "assignee": task.assignee.name,
+                "assignee": task.assignee.id,
                 "status": task.status,
                 "color": "0000ff"
             })
@@ -48,11 +48,13 @@ class GetTask(Resource):
     def get(self, task_id):
         from models import User, Task, TASK_STATUSES
         task = Task.query.get(int(task_id))
+        if task is None:
+            return None
         ret_task = {
             "id": task.id,
             "name": task.name,
             "description": task.description,
-            "assignee": task.assignee.name,
+            "assignee": task.assignee.id,
             "status": task.status,
             "color": "0000ff"
         }
@@ -63,9 +65,11 @@ class GetUser(Resource):
     def get(self, user_id):
         from models import User, Task, TASK_STATUSES
         user = User.query.get(int(user_id))
+        if user is None: 
+            return None
         ret_user = {
             "name": user.name,
-            "assigned_tasks": [task.name for task in user.tasks],
+            "assigned_tasks": [task.id for task in user.tasks],
             "photo_url": "static_photo.jpg"
         }
         return ret_user
@@ -96,6 +100,8 @@ class ChangeUser(Resource):
 
 class CreateTask(Resource):
     def post(self):
+        from models import User, Task, TASK_STATUSES
+        from app import db
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, default="")
@@ -107,13 +113,18 @@ class CreateTask(Resource):
         if not args.status in TASK_STATUSES:
             return {"status": False, "message": "Invalid task status"}
 
-        if message in args: # we think message indicates an error
+        if 'message' in args: # we think message indicates an error
             return {"status": False, "message": parser['message']}
+
+        # Fail if assigned id was supplied but is invalid
+        if not args.assigned_id is None and User.query.get(args.assigned_id) is None:
+            return {"status": False, "message": "Invalid assigned id"}
 
         t = Task()
         t.name = args.name
         t.description = args.description
-        t.assignee = args.assignee
+        t.assignee = None if not args.assigned_id else User.query.get(args.assigned_id)
+        
         t.status = args.status
         t.color = args.color
         db.session.add(t)
@@ -124,7 +135,7 @@ class CreateTask(Resource):
             'task': {
                 "name": args.name,
                 "description": args.description,
-                "assignee": User.query.get(args.assigned_id).id,
+                "assignee": None if not args.assigned_id else User.query.get(args.assigned_id).name,
                 "status": args.status,
                 "color": args.color
             }
@@ -132,4 +143,8 @@ class CreateTask(Resource):
 
 
 class CreateUser(Resource):
-    pass 
+    def post(self):
+        from models import User, Task, TASK_STATUSES
+        from app import db
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('arg')
