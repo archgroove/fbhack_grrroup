@@ -10,7 +10,7 @@ class UserList(Resource):
             all_users.append(
                 { 
                     "name": user.name,
-                    "assigned_tasks": user.tasks,
+                    "assigned_tasks": [task.id for task in user.tasks],
                     "photo_url": "static_photo.jpg"
                 }
             )
