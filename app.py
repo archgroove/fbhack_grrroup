@@ -12,12 +12,12 @@ from views import *
 api.add_resource(UserList, '/api/list/users')
 api.add_resource(TaskList, '/api/list/tasks')
 api.add_resource(Project, '/api/get/project')
-api.add_resource(GetTask, '/api/get/task/<str:task_id>')
-api.add_resource(GetUser, '/api/get/user/<str:user_id>')
-api.add_resource(ChangeTask, '/api/change/task/<str:task_id>')
-api.add_resource(ChangeUser, '/api/change/user/<str:user_id>')
-api.add_resource(CreateTask, '/api/create/task/<str:task_id>')
-api.add_resource(CreateUser, '/api/create/user/<str:user_id>')
+api.add_resource(GetTask, '/api/get/task/<int:task_id>')
+api.add_resource(GetUser, '/api/get/user/<int:user_id>')
+api.add_resource(ChangeTask, '/api/change/task/<int:task_id>')
+api.add_resource(ChangeUser, '/api/change/user/<int:user_id>')
+api.add_resource(CreateTask, '/api/create/task/<int:task_id>')
+api.add_resource(CreateUser, '/api/create/user/<int:user_id>')
 
 if __name__ == '__main__':
     app.run(debug=True)
