@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
-from models import User, Task
-
+from models import User, Task, TASK_STATUSES
+__all__ = ["UserList", "TaskList", "Project", "GetTask", "GetUser", "ChangeTask", "ChangeUser", "CreateTask", "CreateUser"]
 
 class UserList(Resource):
     def get(self):
@@ -126,4 +126,4 @@ class CreateTask(Resource):
 
 
 class CreateUser(Resource):
-   pass 
+    pass 
