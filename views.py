@@ -1,6 +1,5 @@
 from flask_restful import Resource
-from .app import db
-from .models import User
+from models import User
 
 
 class Users(Resource):

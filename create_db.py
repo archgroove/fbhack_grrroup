@@ -1,4 +1,4 @@
-from .app import db
+from app import db
 db.create_all()
 
 # Create actual users

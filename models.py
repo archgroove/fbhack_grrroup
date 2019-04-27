@@ -1,5 +1,4 @@
-from .app import db
-app = Flask(__name__)
+from app import db
 
 
 class User(db.Model):

@@ -7,6 +7,8 @@ api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/tfpk/code/hack/test.db'
 db = SQLAlchemy(app)
 
+from views import *
+
 api.add_resource(Users, '/api/users')
 
 if __name__ == '__main__':
