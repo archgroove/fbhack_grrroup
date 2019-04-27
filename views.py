@@ -10,7 +10,7 @@ class UserList(Resource):
             all_users.append(
                 { 
                     "name": user.name,
-                    "assigned_tasks": [task.id for task in user.tasks],
+                    "assigned_tasks": [task.name for task in user.tasks],
                     "photo_url": "static_photo.jpg"
                 }
             )
@@ -26,7 +26,7 @@ class TaskList(Resource):
                 "id": task.id,
                 "name": task.name,
                 "description": task.description,
-                "assignee": task.assignee.id,
+                "assignee": task.assignee.name,
                 "status": task.status,
                 "color": "0000ff"
             })
@@ -52,7 +52,7 @@ class GetTask(Resource):
             "id": task.id,
             "name": task.name,
             "description": task.description,
-            "assignee": task.assignee,
+            "assignee": task.assignee.name,
             "status": task.status,
             "color": "0000ff"
         }
@@ -65,7 +65,7 @@ class GetUser(Resource):
         user = User.query.get(int(user_id))
         ret_user = {
             "name": user.name,
-            "assigned_tasks": user.tasks,
+            "assigned_tasks": [task.name for task in user.tasks],
             "photo_url": "static_photo.jpg"
         }
         return ret_user
