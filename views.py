@@ -95,7 +95,41 @@ class ChangeTask(Resource):
 
 
 class ChangeUser(Resource):
-    pass
+    def put(self, user_id):
+        
+        from models import User
+        from app import db
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('facebook_details', type=str)
+        parser.add_argument('name', type=str, required=True)
+        parser.add_argument('email', type=str, required=True)
+        args = parser.parse_args()
+
+        u = User.query.get(user_id)
+        
+        if u is None:
+            return {"status": False, "message": "No such user"}
+
+        u = User()
+        if args.facebook_details:
+            u.facebook_details = args.facebook_details
+        if args.name:
+            u.name = args.name
+        if args.email:
+            u.email = args.email
+        db.session.add(u)
+        db.session.commit()
+
+        return {
+            "status": True,
+            "user": {
+                "facebook_details": args.facebook_details,
+                "name": args.name,
+                "email": args.email
+            }
+        }
+         
 
 
 class CreateTask(Resource):
@@ -135,7 +169,7 @@ class CreateTask(Resource):
             'task': {
                 "name": args.name,
                 "description": args.description,
-                "assignee": None if not args.assigned_id else User.query.get(args.assigned_id).name,
+                "assignee": None if not args.assigned_id else args.assigned_id,
                 "status": args.status,
                 "color": args.color
             }
@@ -147,4 +181,23 @@ class CreateUser(Resource):
         from models import User, Task, TASK_STATUSES
         from app import db
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('arg')
+        parser.add_argument('facebook_details', type=str)
+        parser.add_argument('name', type=str, required=True)
+        parser.add_argument('email', type=str, required=True)
+        args = parser.parse_args()
+
+        u = User()
+        u.facebook_details = args.facebook_details
+        u.name = args.name
+        u.email = args.email
+        db.session.add(u)
+        db.session.commit()
+
+        return {
+            "status": True,
+            "user": {
+                "facebook_details": args.facebook_details,
+                "name": args.name,
+                "email": args.email
+            }
+        }
