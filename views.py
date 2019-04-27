@@ -20,14 +20,14 @@ class TaskList(Resource):
     def get(self):
         all_tasks = []
         for task in Task.query.all():
-            all_tasks.append(
+            all_tasks.append({
                 "id": task.id,
                 "name": task.name,
                 "description": task.description,
                 "assignee": task.assignee,
                 "status": task.status,
                 "color": "0000ff"
-            )
+            })
         return all_tasks
 
 class Project(Resource):
@@ -38,4 +38,22 @@ class Project(Resource):
             "tasks": [task.id for task in Task.query.all()],
             "users": [user.id for user in User.query.all()]
         }
-    return project
+        return project
+
+class GetTask(Resource):
+    pass
+
+class GetUser(Resource):
+    pass
+
+class ChangeTask(Resource):
+    pass
+
+class ChangeUser(Resource):
+    pass
+
+class CreateTask(Resource):
+    pass
+
+class CreateUser(Resource):
+    pass
