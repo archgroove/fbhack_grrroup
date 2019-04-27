@@ -77,21 +77,52 @@ class GetUser(Resource):
 
 class ChangeTask(Resource):
     def post(self, task_id):
+        
         from models import User, Task, TASK_STATUSES
-        parser.add_argument('name_of_thing_you_want_to_add', type=str)
+        from app import db
+        
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', type=str)
+        parser.add_argument('description', type=str)
+        parser.add_argument('assigned_id', type=int)
+        parser.add_argument('status', type=str)
+        parser.add_argument('color', type=str)
         args = parser.parse_args()
 
-        new_task = Task()
-        new_task.thing = "thing"
+        if 'message' in args: # we think message indicates an error
+            return {"status": False, "message": parser['message']}
+        
+        if args.status is not None and not args.status in TASK_STATUSES:
+            return {"status": False, "message": "Invalid task status"}
 
-        db.session.add(new_task)
+        # Fail if assigned id was supplied but is invalid
+        if not args.assigned_id is None and User.query.get(args.assigned_id) is None:
+            return {"status": False, "message": "Invalid assigned id"}
+
+        t = Task()
+        if args.name:
+            t.name = args.name
+        if args.description:
+            t.description = args.description
+        if args.assigned_id:
+            t.assignee = args.assigned_id
+        if args.status:
+            t.status = args.status
+        if args.color:
+            t.color = args.color
+        db.session.add(t)
         db.session.commit()
 
         return {
             'status': True,
-            'thingo': args.get('name_of_thing_you_want_to_add')
+            'task': {
+                "name": t.name,
+                "description": t.description,
+                "assignee": t.assignee,
+                "status": t.status,
+                "color": t.color
+            }
         }
-    pass
 
 
 class ChangeUser(Resource):
@@ -107,7 +138,10 @@ class ChangeUser(Resource):
         args = parser.parse_args()
 
         u = User.query.get(user_id)
-        
+       
+        if 'message' in args:
+            return {"status": False, "message": args['message']}
+
         if u is None:
             return {"status": False, "message": "No such user"}
 
@@ -124,9 +158,9 @@ class ChangeUser(Resource):
         return {
             "status": True,
             "user": {
-                "facebook_details": args.facebook_details,
-                "name": args.name,
-                "email": args.email
+                "facebook_details": u.facebook_details,
+                "name": u.name,
+                "email": u.email
             }
         }
          
@@ -157,7 +191,7 @@ class CreateTask(Resource):
         t = Task()
         t.name = args.name
         t.description = args.description
-        t.assignee = None if not args.assigned_id else User.query.get(args.assigned_id)
+        t.assignee = None if not args.assigned_id else args.assigned_id
         
         t.status = args.status
         t.color = args.color
