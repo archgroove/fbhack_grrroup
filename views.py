@@ -1,9 +1,10 @@
 from flask_restful import Resource, reqparse
-from models import User, Task, TASK_STATUSES
+
 __all__ = ["UserList", "TaskList", "Project", "GetTask", "GetUser", "ChangeTask", "ChangeUser", "CreateTask", "CreateUser"]
 
 class UserList(Resource):
     def get(self):
+        from models import User, Task, TASK_STATUSES
         all_users = []
         for user in User.query.all():
             all_users.append(
@@ -18,6 +19,7 @@ class UserList(Resource):
 
 class TaskList(Resource):
     def get(self):
+        from models import User, Task, TASK_STATUSES
         all_tasks = []
         for task in Task.query.all():
             all_tasks.append({
@@ -32,6 +34,7 @@ class TaskList(Resource):
 
 class Project(Resource):
     def get(self):
+        from models import User, Task, TASK_STATUSES
         project = {
             "name": "My project name",
             "description": "My project description",
@@ -43,6 +46,7 @@ class Project(Resource):
 
 class GetTask(Resource):
     def get(self, task_id):
+        from models import User, Task, TASK_STATUSES
         task = Task.query.get(int(task_id))
         ret_task = {
             "id": task.id,
@@ -57,6 +61,7 @@ class GetTask(Resource):
 
 class GetUser(Resource):
     def get(self, user_id):
+        from models import User, Task, TASK_STATUSES
         user = User.query.get(int(user_id))
         ret_user = {
             "name": user.name,
@@ -68,6 +73,7 @@ class GetUser(Resource):
 
 class ChangeTask(Resource):
     def post(self, task_id):
+        from models import User, Task, TASK_STATUSES
         parser.add_argument('name_of_thing_you_want_to_add', type=str)
         args = parser.parse_args()
 
