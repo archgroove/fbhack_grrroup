@@ -242,28 +242,28 @@ class CreateUser(Resource):
             }
         }
 
-class UpdateAvatar(Resource):
-    def post(self, user_id):
-        parser=reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('avatar', type=str) # a filepath
-        args = parser.parser_args()
-
-        if 'message' in args:
-            return {"status": False, "message": "Incorrect avatar"}
-    
-        u = User.query.get(user_id)
-        if args.avatar:
-            u.avatar = args.avatar
-        db.session.add(u)
-        db.session.commit()
-        
-        return {
-            "status": True,
-            "user": {
-                "id": u.id,
-                "avatar": u.avatar
-            }
-        }
+#class UpdateAvatar(Resource):
+#    def post(self, user_id):
+#        parser=reqparse.RequestParser(bundle_errors=True)
+#        parser.add_argument('avatar', type=str) # a filepath
+#        args = parser.parser_args()
+#
+#        if 'message' in args:
+#            return {"status": False, "message": "Incorrect avatar"}
+#    
+#        u = User.query.get(user_id)
+#        if args.avatar:
+#            u.avatar = args.avatar
+#        db.session.add(u)
+#        db.session.commit()
+#        
+#        return {
+#            "status": True,
+#            "user": {
+#                "id": u.id,
+#                "avatar": u.avatar
+#            }
+#        }
 
 class GetUnassigned(Resource):
     def get(self):
