@@ -11,6 +11,7 @@ from views import *
 
 api.add_resource(UserList, '/api/list/users')
 api.add_resource(TaskList, '/api/list/tasks')
+api.add_resource(Project, '/api/get/project')
 api.add_resource(GetTask, '/api/get/task/<str:task_id>')
 api.add_resource(GetUser, '/api/get/user/<str:user_id>')
 api.add_resource(ChangeTask, '/api/change/task/<str:task_id>')
