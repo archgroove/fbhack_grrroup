@@ -89,7 +89,6 @@ class ChangeUser(Resource):
 
 
 class CreateTask(Resource):
-    class CreateTask(Resource):
     def post(self):
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', type=str, required=True)
@@ -125,4 +124,4 @@ class CreateTask(Resource):
 
 
 class CreateUser(Resource):
-    pass
+    
