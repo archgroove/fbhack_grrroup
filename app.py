@@ -21,6 +21,7 @@ api.add_resource(ChangeTask, '/api/change/task/<int:task_id>')
 api.add_resource(ChangeUser, '/api/change/user/<int:user_id>')
 api.add_resource(CreateTask, '/api/create/task')
 api.add_resource(CreateUser, '/api/create/user')
+api.add_resource(GetUnassigned, '/api/get/unassigned')
 
 if __name__ == '__main__':
     app.run(debug=True)

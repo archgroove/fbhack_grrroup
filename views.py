@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
+import requests
 
-__all__ = ["UserList", "TaskList", "Project", "GetTask", "GetUser", "ChangeTask", "ChangeUser", "CreateTask", "CreateUser"]
+__all__ = ["UserList", "TaskList", "Project", "GetTask", "GetUser", "ChangeTask", "ChangeUser", "CreateTask", "CreateUser", "GetUnassigned"]
 
 class UserList(Resource):
     def get(self):
@@ -12,7 +13,7 @@ class UserList(Resource):
                     "id": user.id,
                     "name": user.name,
                     "assigned_tasks": [task.id for task in user.tasks],
-                    "photo_url": "static_photo.jpg"
+                    "photo_url": user.avatar
                 }
             )
         return all_users
@@ -136,6 +137,7 @@ class ChangeUser(Resource):
         parser.add_argument('facebook_details', type=str)
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('email', type=str, required=True)
+        parser.add_argument('avatar', type=str, required=False) # a filepath
         args = parser.parse_args()
 
         u = User.query.get(user_id)
@@ -153,6 +155,8 @@ class ChangeUser(Resource):
             u.name = args.name
         if args.email:
             u.email = args.email
+        if args.avatar:
+            u.avatar = args.avatar
         db.session.add(u)
         db.session.commit()
 
@@ -161,7 +165,8 @@ class ChangeUser(Resource):
             "user": {
                 "facebook_details": u.facebook_details,
                 "name": u.name,
-                "email": u.email
+                "email": u.email,
+                "avatar": u.avatar
             }
         }
          
@@ -236,3 +241,45 @@ class CreateUser(Resource):
                 "email": args.email
             }
         }
+
+class UpdateAvatar(Resource):
+    def post(self, user_id):
+        parser=reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('avatar', type=str) # a filepath
+        args = parser.parser_args()
+
+        if 'message' in args:
+            return {"status": False, "message": "Incorrect avatar"}
+    
+        u = User.query.get(user_id)
+        if args.avatar:
+            u.avatar = args.avatar
+        db.session.add(u)
+        db.session.commit()
+        
+        return {
+            "status": True,
+            "user": {
+                "id": u.id,
+                "avatar": u.avatar
+            }
+        }
+
+class GetUnassigned(Resource):
+    def get(self):
+        from models import Task
+
+        unassigned_tasks = []
+        for task in Task.query.filter(Task.assignee==None):
+            unassigned_tasks.append({
+                "id": task.id,
+                "name": task.name,
+                "description": task.description,
+                "assignee": task.assignee.id,
+                "status": task.status,
+                "color": "0000ff"
+            })
+        return unassigned_tasks
+
+        
+
